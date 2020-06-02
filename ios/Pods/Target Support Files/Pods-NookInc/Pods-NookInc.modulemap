@@ -1,0 +1,6 @@
+module Pods_NookInc {
+  umbrella header "Pods-NookInc-umbrella.h"
+
+  export *
+  module * { export * }
+}

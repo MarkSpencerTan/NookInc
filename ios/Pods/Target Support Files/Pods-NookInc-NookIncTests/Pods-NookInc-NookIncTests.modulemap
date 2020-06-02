@@ -1,0 +1,6 @@
+module Pods_NookInc_NookIncTests {
+  umbrella header "Pods-NookInc-NookIncTests-umbrella.h"
+
+  export *
+  module * { export * }
+}
