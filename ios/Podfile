@@ -82,6 +82,8 @@ target 'NookInc' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+
+
   target 'NookIncTests' do
     inherit! :complete
     # Pods for testing
