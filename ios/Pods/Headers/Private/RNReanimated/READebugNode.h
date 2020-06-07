@@ -1,1 +1,5 @@
-../../../../../node_modules/react-native-reanimated/ios/Nodes/READebugNode.h
+#import "REANode.h"
+
+@interface READebugNode : REANode
+
+@end

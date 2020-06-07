@@ -1,1 +1,4 @@
-../../../../../node_modules/react-native-gesture-handler/ios/Handlers/RNForceTouchHandler.h
+#import "RNGestureHandler.h"
+
+@interface RNForceTouchHandler : RNGestureHandler
+@end

@@ -1,1 +1,5 @@
-../../../../../node_modules/react-native-reanimated/ios/REAUtils.h
+#import <Foundation/Foundation.h>
+
+#define REA_LOG_ERROR_IF_NIL(value, errorMsg) ({\
+  if (value == nil) RCTLogError(errorMsg);\
+})

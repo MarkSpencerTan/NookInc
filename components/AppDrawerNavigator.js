@@ -1,22 +1,19 @@
 import 'react-native-gesture-handler';
 import React, { Component } from 'react';
-import HomeScreen from "../screens/HomeScreen"
-
+import HomeScreen from "./HomeScreen"
+import firebase from "./Firebase"
 import { StyleSheet, Platform, StatusBar, View } from 'react-native';
-import { Container, Header, Content, ListItem, Left, Icon } from 'native-base';
-import { FlatList } from 'react-native-gesture-handler';
-import MessageScreen from '../screens/MessageScreen';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import {
-    Avatar,
-    Title,
-    Caption,
-    Paragraph,
     Drawer,
     Text,
     TouchableRipple,
-    Switch
+    Switch,
+    Appbar,
+    Avatar,
 } from 'react-native-paper';
+
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const DrawerNavigator = createDrawerNavigator();
 
@@ -25,18 +22,23 @@ const CustomDrawerContent = (props) => {
     const toggleTheme = () => {
         setIsDarkTheme(!isDarkTheme);
     }
+
+    const signOut = () => {
+        firebase.auth().signOut().then(function() {
+            console.log("signout success")
+          }).catch(function(error) {
+            console.log("signout failed")
+          });
+    }
     
     return (
-        <Container style={{backgroundColor: '#fcf9b1'}}>
-            <Header style={[{ backgroundColor: '#efe167', height: 70}, styles.androidHeader]}>
-                <Left style={{flex: 1, flexDirection: 'row', paddingLeft: 15, alignItems:'center'}}>
-                    <Icon name="person" style={{color: '#5a482f'}}></Icon>
-                    <View style={{flex: 1, marginLeft: 30}}>
-                        <Text style={{fontSize: 15, color: '#5a482f'}}>Mark</Text>
-                        <Text note style={{color: '#5a482f'}}>Lives at CoronaVill</Text>
-                    </View>
-                </Left>
-            </Header>
+        <View style={{flex:1}}>
+            <Appbar.Header style={[{height: 70}, styles.androidHeader]}>
+                <Appbar.Content
+                    title="Mark"
+                    subtitle="Lives in CoronaVille"
+                />
+            </Appbar.Header>
             <DrawerContentScrollView {...props}>
                 <View style={{flex: 1}}>
                     <Drawer.Section style={styles.drawerSection}>
@@ -44,10 +46,10 @@ const CustomDrawerContent = (props) => {
                             <Icon name="home" color={color} size={size}/>
                         )} label="Home" onPress={() => {props.navigation.navigate('Home')}}/>
                         <DrawerItem icon={({color, size}) => (
-                            <Icon name="ios-chatbubbles" color={color} size={size}/>
+                            <Icon name="chat" color={color} size={size}/>
                         )} label="Messages" onPress={() => {props.navigation.navigate('Messages')}}/>
                         <DrawerItem icon={({color, size}) => (
-                            <Icon name="person" color={color} size={size}/>
+                            <Icon name="account" color={color} size={size}/>
                         )} label="Profile" onPress={() => {props.navigation.navigate('Profile')}}/>
                         <DrawerItem icon={({color, size}) => (
                             <Icon name="settings" color={color} size={size}/>
@@ -68,37 +70,21 @@ const CustomDrawerContent = (props) => {
             </DrawerContentScrollView>
             <Drawer.Section>
                 <DrawerItem icon={({color, size}) => (
-                    <Icon name="log-out" color={color} size={size}/>
-                )} label="Sign Out" onPress={() => {}}/>
+                    <Icon name="logout" color={color} size={size}/>
+                )} label="Sign Out" onPress={signOut}/>
             </Drawer.Section>
-            {/* <Content>
-                <ListItem button noBorder>
-                    <Text>Home</Text>
-                </ListItem>
-                <ListItem button noBorder>
-                    <Text>Messages</Text>
-                </ListItem>
-            </Content> */}
-
-        </Container>
+        </View>
     )
 }
 
-const navigateView = (item) => {
-    NavigationAction.view(item)
-    console.log("logging")
+const AppDrawerNavigator = () => {
+    return (
+        <DrawerNavigator.Navigator drawerContent={(props) => <CustomDrawerContent {...props}/>} initialRouteName="Home">
+            <DrawerNavigator.Screen name="Home" component={HomeScreen} />
+        </DrawerNavigator.Navigator>
+    ) 
 }
 
-class AppDrawerNavigator extends Component {
-    render() {
-        return (
-            <DrawerNavigator.Navigator drawerContent={(props) => <CustomDrawerContent {...props}/>} initialRouteName="Home">
-                <DrawerNavigator.Screen name="Home" component={HomeScreen} />
-                <DrawerNavigator.Screen name="Messages" component={MessageScreen} />
-            </DrawerNavigator.Navigator>
-        )
-    }
-}
 export default AppDrawerNavigator;
 
 const styles = StyleSheet.create({

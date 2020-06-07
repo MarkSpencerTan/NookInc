@@ -1,1 +1,6 @@
-../../../../../node_modules/react-native-reanimated/ios/Nodes/REATransformNode.h
+#import "REANode.h"
+
+@interface REATransformNode : REANode
+
+@end
+

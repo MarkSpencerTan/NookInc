@@ -1,1 +1,7 @@
-../../../../../node_modules/react-native-reanimated/ios/Nodes/REACallFuncNode.h
+
+#import "REANode.h"
+
+@interface REACallFuncNode : REANode
+
+@end
+

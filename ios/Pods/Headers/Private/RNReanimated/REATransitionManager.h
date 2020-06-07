@@ -1,1 +1,9 @@
-../../../../../node_modules/react-native-reanimated/ios/Transitioning/REATransitionManager.h
+#import <Foundation/Foundation.h>
+#import <React/RCTUIManager.h>
+
+@interface REATransitionManager : NSObject
+
+- (instancetype)initWithUIManager:(RCTUIManager *)uiManager;
+- (void)animateNextTransitionInRoot:(nonnull NSNumber *)reactTag withConfig:(NSDictionary *)config;
+
+@end

@@ -1,54 +1,91 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import firebase from './firebase'
-import LoginScreen from "./screens/LoginScreen"
-import AppDrawerNavigator from "./components/AppDrawerNavigator"
-import { Button, View, StyleSheet } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-export default class App extends React.Component {
+import {StyleSheet, Text, View} from 'react-native';
+import Context from './components/Context'
+import RootStackScreen from './components/RootStackScreen';
+import AppDrawerNavigator from './components/AppDrawerNavigator';
+import firebase from './components/Firebase'
+import { 
+    NavigationContainer,
+    DefaultTheme as NavigationDefaultTheme,
+    DarkTheme as NavigationDarkTheme } from '@react-navigation/native';
+import {
+    DefaultTheme as PaperDefaultTheme,
+    DarkTheme as PaperDarkTheme,
+    Provider,
+    ActivityIndicator
+} from 'react-native-paper'
 
-    state = {
-        loggedIn: false
+const CustomDefaultTheme = {
+    ...NavigationDefaultTheme,
+    ...PaperDefaultTheme,
+    colors: {
+        ...NavigationDefaultTheme.colors,
+        ...PaperDefaultTheme.colors,
+        background: '#ffffff',
+        text: '#333333'
     }
-
-    componentDidMount() {
-        console.log("Im here")
-        firebase.auth().onAuthStateChanged(user => {
-            console.log("something changed")
-            if (user) {
-            this.setState({
-                loggedIn: true
-            })
-            }
-            else {
-            this.setState({
-                loggedIn: false
-            })
-            }
-        })
+}
+  
+const CustomDarkTheme = {
+    ...NavigationDarkTheme,
+    ...PaperDarkTheme,
+    colors: {
+        ...NavigationDarkTheme.colors,
+        ...PaperDarkTheme.colors,
+        background: 'black',
+        text: '#ffffff'
     }
+}
 
-    render() {
-        switch(this.state.loggedIn) {
-            case false:
-                return (
-                    <LoginScreen/>
-                )
-            case true:
-                return (
-                    <NavigationContainer>
-                        <AppDrawerNavigator/>
-                    </NavigationContainer>
-                );
+const App = () => {
+    const [isDarkTheme, setIsDarkTheme] = React.useState(false);
+    const theme = isDarkTheme ? CustomDarkTheme : CustomDefaultTheme;
+
+    const [isLoading, setLoading] = React.useState(false)
+    const [isLoggedIn, setLoggedIn] = React.useState(false)
+
+    // checks if user is logged in
+    firebase.auth().onAuthStateChanged(user => {
+        console.log("checking user login")
+        if (user) {
+            setLoggedIn(true)
         }
-        
+        else {
+            setLoggedIn(false)
+        }
+    })
+
+    if (isLoading) {
+        useEffect(() => {
+            setTimeout(() => {
+                setIsLoading(false)
+            }, 1000);
+        }, [])
+        return (
+            <View style={styles.loading}>
+                <ActivityIndicator size="large"/>
+            </View>
+        )
+    } else {
+        return (
+            <View style={{flex:1}}>
+                <Provider theme={theme}>
+                    <NavigationContainer theme={theme}>
+                        { isLoggedIn ? <AppDrawerNavigator/> : <RootStackScreen/>}
+                    </NavigationContainer>
+                </Provider>
+            </View>
+        );
     }
 };
 
+export default App;
+
 const styles = StyleSheet.create({
-    container: {
+    loading: {
         flex: 1,
-        backgroundColor: 'white',
-        justifyContent: 'center'
-    } 
+        justifyContent: 'center',
+        alignItems:'center'
+    }
 });
