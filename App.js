@@ -42,7 +42,6 @@ const App = () => {
     const [isDarkTheme, setIsDarkTheme] = React.useState(false);
     const theme = isDarkTheme ? CustomDarkTheme : CustomDefaultTheme;
 
-    const [isLoading, setLoading] = React.useState(false)
     const [isLoggedIn, setLoggedIn] = React.useState(false)
 
     // checks if user is logged in
@@ -56,28 +55,16 @@ const App = () => {
         }
     })
 
-    if (isLoading) {
-        useEffect(() => {
-            setTimeout(() => {
-                setIsLoading(false)
-            }, 1000);
-        }, [])
-        return (
-            <View style={styles.loading}>
-                <ActivityIndicator size="large"/>
-            </View>
-        )
-    } else {
-        return (
-            <View style={{flex:1}}>
-                <Provider theme={theme}>
-                    <NavigationContainer theme={theme}>
-                        { isLoggedIn ? <AppDrawerNavigator/> : <RootStackScreen/>}
-                    </NavigationContainer>
-                </Provider>
-            </View>
-        );
-    }
+    return (
+        <View style={{flex:1}}>
+            <Provider theme={theme}>
+                <NavigationContainer theme={theme}>
+                    { isLoggedIn ? <AppDrawerNavigator/> : <RootStackScreen/>}
+                </NavigationContainer>
+            </Provider>
+        </View>
+    );
+    
 };
 
 export default App;

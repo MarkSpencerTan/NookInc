@@ -9,26 +9,46 @@ import firebase from './Firebase'
 
 const SignInScreen = ({navigation}) => {
     onPressSignIn = () => {
-        console.log(formData)
-        firebase.auth().signInWithEmailAndPassword(formData.email, formData.password)
-            .then(this.onLoginSuccess)
-            .catch(this.onLoginError)
+        // form validation
+        if (formData.email.length == 0) {
+            setErrorMessage("Email cannot be empty!")
+        }
+        else if (!formData.validEmail){
+            setErrorMessage("Invalid Email Address")
+        }
+        else if (formData.password.length == 0) {
+            setErrorMessage("Password cannot be empty!")
+        }
+        else {
+            setFormLoading(true)
+            setErrorMessage(null)
+            firebase.auth().signInWithEmailAndPassword(formData.email, formData.password)
+                .then(this.onLoginSuccess)
+                .catch(this.onLoginError)
+        }
+        
     }
     
     onLoginSuccess = () => {
-        console.log("login success")
+        console.log("successfully created firebase account")
+        setErrorMessage(null)
+        setFormLoading(false)
     }
 
     onLoginError = (error) => {
-        console.log("failed to login", error)
+        console.log("failed to create account", error.message)
+        setErrorMessage(error.message)
+        setFormLoading(false)
     }
 
     const [formData, setFormData] = React.useState({
         email: '',
         validEmail: null,
         password: '',
-        secureTextEntry: false,
+        secureTextEntry: true,
     })
+    const [errorMessage, setErrorMessage] = React.useState(null)
+    const [isFormLoading, setFormLoading] = React.useState(false)
 
     const setEmail = (email) => {
         const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -96,11 +116,19 @@ const SignInScreen = ({navigation}) => {
                         </View>
                     </View>
                 </View>
+                {/* error message for sign up errors */}
+                { errorMessage ?
+                    <Animatable.View animation="shake">
+                        <Text style={styles.errorMessage}>{errorMessage}</Text>
+                    </Animatable.View>
+                    : null
+                }
                 <Button 
                     icon="login"
                     mode="contained"
                     style={styles.button}
-                    onPress={onPressSignIn}>
+                    onPress={onPressSignIn}
+                    loading={isFormLoading}>
                     Sign In
                 </Button>
                 <Button 

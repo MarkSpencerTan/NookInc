@@ -11,19 +11,39 @@ import firebase from './Firebase'
 const CreateAccountScreen = ({navigation}) => {
     
     onPressSubmit = () => {
-        console.log(formData)
-        firebase.auth().createUserWithEmailAndPassword(email, password)
+        // form validation
+        if (formData.email.length == 0) {
+            setErrorMessage("Email cannot be empty!")
+        }
+        else if (!formData.validEmail){
+            setErrorMessage("Invalid Email Address")
+        }
+        else if (formData.password.length == 0) {
+            setErrorMessage("Password cannot be empty!")
+        }
+        else if (formData.password !== formData.confirmPassword) {
+            setErrorMessage("Confirm password does not match!")
+        }
+        else {
+            setFormLoading(true)
+            console.log(formData)
+            setErrorMessage(null)
+            firebase.auth().createUserWithEmailAndPassword(formData.email, formData.password)
             .then(onSubmitSuccess)
             .catch(onSubmitFail)
+        }
     }
 
     onSubmitSuccess = () => {
         console.log("successfully created firebase account")
+        setErrorMessage(null)
+        setFormLoading(false)
     }
 
     onSubmitFail = (error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
+        console.log("failed to create account", error.message)
+        setErrorMessage(error.message)
+        setFormLoading(false)
     }
 
     const [formData, setFormData] = React.useState({
@@ -31,17 +51,24 @@ const CreateAccountScreen = ({navigation}) => {
         validEmail: null,
         password: '',
         confirmPassword: '',
-        secureTextEntry: false,
-        confirmSecureTextEntry: false
+        secureTextEntry: true,
+        confirmSecureTextEntry: true
     })
+    const [errorMessage, setErrorMessage] = React.useState(null)
+    const [isFormLoading, setFormLoading] = React.useState(false)
+
+    const isEmailValid = (email) => {
+        const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        return reg.test(email) ? true : false
+    }
 
     const setEmail = (email) => {
         const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-        if (reg.test(email) === true){
+        if (isEmailValid(email)){
             setFormData({...formData, email: email, validEmail: true})
         }
         else{
-            setFormData({...formData, validEmail: false})
+            setFormData({...formData, email: email, validEmail: false})
         }
     }
 
@@ -127,12 +154,19 @@ const CreateAccountScreen = ({navigation}) => {
                         </View>
                     </View>
                 </View>
-                
+                {/* error message for sign up errors */}
+                { errorMessage ?
+                    <Animatable.View animation="shake">
+                        <Text style={styles.errorMessage}>{errorMessage}</Text>
+                    </Animatable.View>
+                    : null
+                }
                 <Button 
                     icon="upload-outline"
                     mode="contained"
                     style={styles.button}
-                    onPress={onPressSubmit}>
+                    onPress={onPressSubmit}
+                    loading={isFormLoading}>
                     Submit
                 </Button>
                 <Button 
@@ -200,5 +234,10 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         backgroundColor: "#009387",
         marginBottom: 10
+    },
+    errorMessage: {
+        color: 'red',
+        marginBottom: 30,
+        textAlign: 'center'
     }
 })
