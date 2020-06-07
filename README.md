@@ -10,4 +10,5 @@ Inspired by Nookazon.com, but I wanted to add in an extra feature to enable push
    cd ios && pod install && cd ..
    npx react-native run-ios
    npx react-native run-android 
+   
    ```
