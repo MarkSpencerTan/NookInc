@@ -196,5 +196,10 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         backgroundColor: "#009387",
         marginBottom: 10
+    },
+    errorMessage: {
+        color: 'red',
+        marginBottom: 30,
+        textAlign: 'center'
     }
 })

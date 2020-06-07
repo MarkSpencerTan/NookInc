@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import Context from './components/Context'
+import { AppContext } from './components/Context'
 import RootStackScreen from './components/RootStackScreen';
 import AppDrawerNavigator from './components/AppDrawerNavigator';
 import firebase from './components/Firebase'
@@ -41,8 +41,13 @@ const CustomDarkTheme = {
 const App = () => {
     const [isDarkTheme, setIsDarkTheme] = React.useState(false);
     const theme = isDarkTheme ? CustomDarkTheme : CustomDefaultTheme;
-
     const [isLoggedIn, setLoggedIn] = React.useState(false)
+
+    const themeContext = React.useMemo(() => ({
+        toggleTheme: () => {
+          setIsDarkTheme( isDarkTheme => !isDarkTheme );
+        }
+    }), []);
 
     // checks if user is logged in
     firebase.auth().onAuthStateChanged(user => {
@@ -58,9 +63,11 @@ const App = () => {
     return (
         <View style={{flex:1}}>
             <Provider theme={theme}>
-                <NavigationContainer theme={theme}>
-                    { isLoggedIn ? <AppDrawerNavigator/> : <RootStackScreen/>}
-                </NavigationContainer>
+                <AppContext.Provider value={themeContext}>
+                    <NavigationContainer theme={theme}>
+                        { isLoggedIn ? <AppDrawerNavigator/> : <RootStackScreen/>}
+                    </NavigationContainer>
+                </AppContext.Provider>
             </Provider>
         </View>
     );

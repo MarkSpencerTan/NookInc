@@ -2,6 +2,7 @@ import 'react-native-gesture-handler';
 import React, { Component } from 'react';
 import HomeScreen from "./HomeScreen"
 import firebase from "./Firebase"
+import { AppContext } from './Context'
 import { StyleSheet, Platform, StatusBar, View } from 'react-native';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import {
@@ -11,6 +12,7 @@ import {
     Switch,
     Appbar,
     Avatar,
+    useTheme
 } from 'react-native-paper';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -18,10 +20,8 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 const DrawerNavigator = createDrawerNavigator();
 
 const CustomDrawerContent = (props) => {
-    const [isDarkTheme, setIsDarkTheme] = React.useState(false)
-    const toggleTheme = () => {
-        setIsDarkTheme(!isDarkTheme);
-    }
+    const { toggleTheme } = React.useContext(AppContext);
+    const paperTheme = useTheme();
 
     const signOut = () => {
         firebase.auth().signOut().then(function() {
@@ -57,11 +57,11 @@ const CustomDrawerContent = (props) => {
 
                     </Drawer.Section>
                     <Drawer.Section title="Preferences">
-                        <TouchableRipple onPress={()=>{toggleTheme()}}>
+                        <TouchableRipple onPress={toggleTheme}>
                             <View style={styles.preference}>
                                 <Text>Dark Theme</Text>
                                 <View pointerEvents="none">
-                                    <Switch value={isDarkTheme}/>
+                                    <Switch value={paperTheme.dark}/>
                                 </View>
                             </View>
                         </TouchableRipple>
