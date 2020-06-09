@@ -23,7 +23,8 @@ const CustomDefaultTheme = {
         ...NavigationDefaultTheme.colors,
         ...PaperDefaultTheme.colors,
         background: '#ffffff',
-        text: '#333333'
+        text: '#333333',
+        primary: '#009387'
     }
 }
   
@@ -33,8 +34,9 @@ const CustomDarkTheme = {
     colors: {
         ...NavigationDarkTheme.colors,
         ...PaperDarkTheme.colors,
-        background: 'black',
-        text: '#ffffff'
+        background: '#333333',
+        text: '#ffffff',
+        primary: '#009387'
     }
 }
 

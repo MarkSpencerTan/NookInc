@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet, Text, View, Dimensions, Image, TextInput } from 'react-native'
-import { Button } from 'react-native-paper'
+import { Button, useTheme } from 'react-native-paper'
 import * as Animatable from 'react-native-animatable'
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
@@ -9,7 +9,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import firebase from './Firebase'
 
 const CreateAccountScreen = ({navigation}) => {
-    
+    const { colors } = useTheme()
     onPressSubmit = () => {
         // form validation
         if (formData.email.length == 0) {
@@ -96,15 +96,16 @@ const CreateAccountScreen = ({navigation}) => {
             </View>
             {/* for the buttons & controls */}
             <Animatable.View 
-                style={styles.footer}
+                style={[styles.footer, { backgroundColor: colors.background }]}
                 animation="fadeInUpBig">
                 <View style={styles.form}>
                     <View style={styles.formItem}>
-                        <TextInput style={styles.formLabel}>Email</TextInput>
+                        <Text style={styles.formLabel}>Email</Text>
                         <View style={styles.formInput}>
                             <FontAwesome name="user-o" size={20} style={styles.formInputIcon}/>
                             <TextInput
                                 placeholder="Enter Email Here"
+                                placeholderTextColor="#666"
                                 autoCapitalize="none"
                                 style={styles.textInput}
                                 onChangeText={setEmail}/>
@@ -118,11 +119,12 @@ const CreateAccountScreen = ({navigation}) => {
                         </View>
                     </View>
                     <View style={styles.formItem}>
-                        <TextInput style={styles.formLabel}>Password</TextInput>
+                        <Text style={styles.formLabel}>Password</Text>
                         <View style={styles.formInput}>
                             <Feather name="lock" size={20} style={styles.formInputIcon}/>
                             <TextInput
                                 placeholder="Enter Password Here"
+                                placeholderTextColor="#666"
                                 autoCapitalize="none"
                                 secureTextEntry={formData.secureTextEntry}
                                 style={styles.textInput}
@@ -136,11 +138,12 @@ const CreateAccountScreen = ({navigation}) => {
                         </View>
                     </View>
                     <View style={styles.formItem}>
-                        <TextInput style={styles.formLabel}>Confirm Password</TextInput>
+                        <Text style={styles.formLabel}>Confirm Password</Text>
                         <View style={styles.formInput}>
                             <Feather name="lock" size={20} style={styles.formInputIcon}/>
                             <TextInput
                                 placeholder="Confirm Password Here"
+                                placeholderTextColor="#666"
                                 autoCapitalize="none"
                                 secureTextEntry={formData.confirmSecureTextEntry}
                                 style={styles.textInput}

@@ -2,9 +2,11 @@ import React from 'react'
 import { StyleSheet, Text, View, Dimensions, Image } from 'react-native'
 import { Button } from 'react-native-paper'
 import * as Animatable from 'react-native-animatable'
+import { useTheme } from '@react-navigation/native';
 
 const SplashScreen = ({navigation}) => {
-    
+    const { colors } = useTheme();
+
     onPressSignIn = () => {
         navigation.push("SignInScreen")
     }
@@ -31,13 +33,13 @@ const SplashScreen = ({navigation}) => {
             </View>
             {/* for the buttons & controls */}
             <Animatable.View 
-                style={styles.footer}
+                style={[styles.footer, {backgroundColor: colors.background}]}
                 animation="fadeInUpBig">
-                <Text style={styles.footerTitle}>Start trading Animal Crossing items with other players!</Text>
+                <Text style={[styles.footerTitle, {color: colors.text}]}>Start trading Animal Crossing items with other players!</Text>
                 <Button 
                     icon="login"
                     mode="contained"
-                    style={styles.button}
+                    style={[styles.button, {}]}
                     onPress={onPressSignIn}>
                     Sign In
                 </Button>
@@ -97,7 +99,6 @@ const styles = StyleSheet.create({
     },
     button: {
         borderRadius: 25,
-        backgroundColor: "#009387",
         marginBottom: 10
     }
 })
